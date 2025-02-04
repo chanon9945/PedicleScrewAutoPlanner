@@ -84,12 +84,20 @@ jnt2Final = jnt2Lim(ITemp2);
 finalTraj = genTraj(insertionTransform,insertionTransform*H1Final*H2Final);
 stage3Time = toc;
 
+%Convert final transform to pedicle screw angle
+trajProjectedYZ = [0,finalTraj(2),finalTraj(3)];
+pitchAngle = rad2deg(atan2(norm(cross([0 1 0],trajProjectedYZ)),dot([0 1 0],trajProjectedYZ)));
+trajProjectedXY = [finalTraj(1),finalTraj(2),0];
+yawAngle = rad2deg(atan2(norm(cross([0 1 0],trajProjectedXY)),dot([0 1 0],trajProjectedXY)));
+
 %Summarize total time used
 totalTime = stage1Time + stage2Time + stage3Time;
 disp("Total Time: " + totalTime + " s")
 disp("Stage 1 (Workspace Generation) Time: " + stage1Time + "s")
 disp("Stage 2 (Image and Volume Processing) Time: " + stage2Time + "s")
 disp("Stage 3 (Search) Time: " + stage3Time + "s")
+disp("Pitch: " + pitchAngle + "deg")
+disp("Yaw: " + yawAngle + "deg")
 
 %Plot Final Trajectory
 % Define the line (vector)
