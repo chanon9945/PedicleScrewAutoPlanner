@@ -1,6 +1,6 @@
 function [H1Mean,H2Mean,H1,H2,jnt1Lim,jnt2Lim] = generateWorkspace(resolution,length)
     jnt1Lim = linspace(-180,180,resolution);
-    jnt2Lim = linspace(0,90,resolution);
+    jnt2Lim = linspace(-90,90,resolution);
     H1 = zeros(4,4,resolution);
     H2 = zeros(4,4,resolution);
 

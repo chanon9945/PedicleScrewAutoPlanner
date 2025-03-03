@@ -6,6 +6,7 @@ tic;
 %Generate virtual robot workspace
 resolution = 1000;
 reach = 100;
+weight = [300 1 30 0.05];
 [H1Mean,H2Mean,H1,H2,jnt1Lim,jnt2Lim] = generateWorkspace(resolution,reach);
 stage1Time = toc;
 
@@ -64,7 +65,10 @@ costTemp2 = zeros(resolution,1);
 
 %Search in H1
 for i = 1:resolution
-    costTemp1(i) = costTotal(insertionPoint,insertionTransform,insertionTransform*se3(H1(:,:,i))*H2Mean,ptCloud,pcaVectors(:,3)',pedicleCenterPoint);
+    costTemp1(i) = costTotal(insertionPoint,insertionTransform,...
+        insertionTransform*se3(H1(:,:,i))*H2Mean,ptCloud,pcaVectors(:,3)',pedicleCenterPoint,weight,resampledVol,reach);
+    disp("Searching 1st link")
+    disp([num2str(i) '\' num2str(resolution)])
 end
 
 [~,ITemp1] = min(costTemp1);
@@ -73,7 +77,10 @@ jnt1Final = jnt1Lim(ITemp1);
 
 %Search in H2
 for i = 1:resolution
-    costTemp2(i) = costTotal(insertionPoint,insertionTransform,insertionTransform*H1Final*se3(H2(:,:,i)),ptCloud,pcaVectors(:,3)',pedicleCenterPoint);
+    costTemp2(i) = costTotal(insertionPoint,insertionTransform,...
+        insertionTransform*H1Final*se3(H2(:,:,i)),ptCloud,pcaVectors(:,3)',pedicleCenterPoint,weight,resampledVol,reach);
+    disp("Searching 2nd link")
+    disp([num2str(i) '\' num2str(resolution)])
 end
 
 [costFinal,ITemp2] = min(costTemp2);
